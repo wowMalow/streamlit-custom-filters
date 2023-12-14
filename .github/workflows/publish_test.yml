@@ -11,7 +11,7 @@ jobs:
     permissions:
         id-token: write
     environment:
-        name: development
+        name: testpypi
         url: https://test.pypi.org/p/streamlit-custom-filters
 
     steps:
