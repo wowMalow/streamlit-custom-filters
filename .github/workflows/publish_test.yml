@@ -6,7 +6,7 @@ on:
 
 jobs:
   
-  publish:
+  publish_test:
     runs-on: ubuntu-22.04
     permissions:
         id-token: write
@@ -40,7 +40,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: python-package-distributions
-          path: 'dist/'
+          path: dist/
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
