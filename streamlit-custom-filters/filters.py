@@ -1,3 +1,7 @@
+"""
+Module with custom block of filter widgets
+"""
+
 from abc import ABC, abstractmethod
 
 import streamlit as st
@@ -7,7 +11,7 @@ import numpy as np
 from typing import List, Union, Tuple
 
 
-class BaseFilter(ABC):
+class Filter(ABC):
     def __init__(self, column: str) -> None:
         self.column = column
         self._values: Union[List[str], Tuple[int|float]]
@@ -28,7 +32,10 @@ class BaseFilter(ABC):
         pass
 
 
-class CategoricalFilter(BaseFilter):
+class CategoricalFilter(Filter):
+    """
+    Multiselect of categorical data
+    """
     def __init__(self, column: str) -> None:
         super().__init__(column)
     
@@ -46,7 +53,10 @@ class CategoricalFilter(BaseFilter):
         self._values = selected
 
 
-class RangeFilter(BaseFilter):
+class RangeFilter(Filter):
+    """
+    Min/max slider value selector
+    """
     def __init__(self, column: str) -> None:
         super().__init__(column)
     
@@ -72,6 +82,9 @@ class RangeFilter(BaseFilter):
 
 
 class GreaterFilter(RangeFilter):
+    """
+    Filter data by low threshold 
+    """
     def __init__(self, column: str) -> None:
         super().__init__(column)
         self._values: Union[int, float]
@@ -91,6 +104,9 @@ class GreaterFilter(RangeFilter):
 
 
 class LessFilter(RangeFilter):
+    """
+    Filter data by high threshold 
+    """
     def __init__(self, column: str) -> None:
         super().__init__(column)
         self._value: Union[int, float]
@@ -110,9 +126,13 @@ class LessFilter(RangeFilter):
 
 
 class DataFrameFilter:
+    """
+    Component that sets up filters block and 
+    displays DataFrame 
+    """
     def __init__(
         self, df: pd.DataFrame,
-        filters: List[BaseFilter],
+        filters: List[Filter],
         columns: int = 2,
         gap: str = "medium",
         
@@ -123,12 +143,14 @@ class DataFrameFilter:
         self.gap = gap
         
     def filter_df(self) -> pd.DataFrame:
+        """Apply all filters for DataFrame"""
         filtered_df = self.df.copy()
         for filter in self.filters:
             filtered_df = filter.filter(filtered_df)
         return filtered_df
 
-    def display_filters(self) -> None:       
+    def display_filters(self) -> None:
+        """Renders the block of filters"""     
         for position, filter in enumerate(self.filters):
             counter = position % self.columns
             
@@ -138,6 +160,6 @@ class DataFrameFilter:
             with col_list[counter]:
                 filter.display(self.df)
     
-    def display_df(self, *args, **kwargs):
-        """Renders the filtered dataframe in the main area."""
+    def display_df(self, *args, **kwargs) -> None:
+        """Renders the filtered dataframe in the main area"""
         st.dataframe(self.filter_df(), *args, **kwargs)
