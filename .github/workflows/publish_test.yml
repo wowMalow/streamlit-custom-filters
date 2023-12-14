@@ -1,7 +1,8 @@
 name: Publish to test PyPI
 
 on: 
-    workflow_dispatch:
+    push:
+        branches: ["main"]
 
 jobs:
   
@@ -14,17 +15,13 @@ jobs:
         url: https://test.pypi.org/p/streamlit-custom-filters
 
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.9"
 
       - name: Install poetry
         run: pip install --upgrade pip wheel poetry
@@ -34,6 +31,12 @@ jobs:
 
       - name: Build
         run: poetry build
+
+      - name: Download all the dists
+        uses: actions/download-artifact@v3
+        with:
+          name: python-package-distributions
+          path: dist/
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
