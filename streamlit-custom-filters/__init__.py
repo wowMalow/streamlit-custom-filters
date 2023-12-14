@@ -6,7 +6,7 @@ from .filters import (
     GreaterFilter,
 )
 
-__all__ =[
+__all__ = [
     "DataFrameFilter",
     "CategoricalFilter",
     "RangeFilter",
