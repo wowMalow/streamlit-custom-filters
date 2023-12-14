@@ -23,11 +23,13 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install poetry
-        run: pip install --upgrade pip wheel poetry
-
-      - name: Install Dependencies
-        run: poetry install --no-dev
+      - name: Install full package
+        run: |
+          python -m venv venv
+          . ./venv/bin/activate
+          pip install --upgrade pip wheel poetry
+          poetry cache clear pypi --all
+          poetry install --no-dev
 
       - name: Build
         run: poetry build
