@@ -1,0 +1,41 @@
+name: Publish to test PyPI
+
+on: 
+    workflow_dispatch:
+
+jobs:
+  
+  publish:
+    runs-on: ubuntu-22.04
+    permissions:
+        id-token: write
+    environment:
+        name: development
+        url: https://test.pypi.org/p/streamlit-custom-filters
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+
+      - name: Install poetry
+        run: pip install --upgrade pip wheel poetry
+
+      - name: Install Dependencies
+        run: poetry install --no-dev
+
+      - name: Build
+        run: poetry build
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with: 
+          repository-url: https://test.pypi.org/legacy/

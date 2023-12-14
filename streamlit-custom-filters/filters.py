@@ -1,7 +1,6 @@
 """
 Module with custom block of filter widgets
 """
-
 from abc import ABC, abstractmethod
 
 import streamlit as st

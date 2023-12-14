@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/wowMalow/streamlit-custom-filters"
 repository = "https://github.com/wowMalow/streamlit-custom-filters"
-documentation = "https://streamlit-custom-filters.github.io"
+documentation = "https://wowmalow.github.io/streamlit-custom-filters/"
 keywords = [
     "streamlit",
     "components",
