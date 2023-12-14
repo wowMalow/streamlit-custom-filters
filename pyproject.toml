@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "streamlit-custom-filters"
+version = "0.1.0"
+description = "Streamlit tools for interactive dataframes filtering"
+authors = ["Edward Malov <edwardmalov@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/wowMalow/streamlit-custom-filters"
+repository = "https://github.com/wowMalow/streamlit-custom-filters"
+documentation = "https://streamlit-custom-filters.github.io"
+keywords = [
+    "streamlit",
+    "components",
+]
+packages = [
+    { include = "streamlit-custom-filters", from = "." },
+]
+
+
+[tool.poetry.dependencies]
+python = ">=3.8, !=3.9.7, <4.0"
+streamlit = "^1.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
