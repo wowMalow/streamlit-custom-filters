@@ -32,13 +32,15 @@ jobs:
           poetry install --no-dev
 
       - name: Build
-        run: poetry build
+        run: |
+            . ./venv/bin/activate
+            poetry build
 
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
           name: python-package-distributions
-          path: dist/
+          path: 'dist/'
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
