@@ -7,15 +7,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-from typing import List, Union, Tuple, Any
+from typing import List, Union, Tuple, Any, Optional
 
 
 class Filter(ABC):
-    def __init__(self, column: str) -> None:
+    def __init__(self, column: str, label: Optional[str] = None) -> None:
         """     
         :param column: name of column to be filtered
         """
         self.column = column
+        self._label = label
         self._values: Union[List[str], Tuple[int|float]]
         
     def reset(self):
@@ -50,8 +51,10 @@ class CategoricalFilter(Filter):
     """
     Multiselect of categorical data
     """
-    def __init__(self, column: str) -> None:
-        super().__init__(column)
+    def __init__(self, column: str, label: Optional[str] = None) -> None:
+        super().__init__(column, label)
+        if label is None:
+            self._label = "Select categories from"
     
     def filter(self, df: pd.DataFrame) -> pd.DataFrame:
         if self._values:
@@ -63,7 +66,7 @@ class CategoricalFilter(Filter):
     
     def display(self, df: pd.DataFrame) -> None:
         options = self._get_range(df)
-        selected = st.multiselect(f"Select categories from '{self.column}'", options=options)
+        selected = st.multiselect(f"{self._label} '{self.column}'", options=options)
         self._values = selected
 
 
@@ -71,8 +74,10 @@ class RangeFilter(Filter):
     """
     Min/max slider value selector
     """
-    def __init__(self, column: str) -> None:
-        super().__init__(column)
+    def __init__(self, column: str, label: Optional[str] = None) -> None:
+        super().__init__(column, label)
+        if label is None:
+            self._label = "Select range for"
     
     def filter(self, df: pd.DataFrame) -> pd.DataFrame:
         if self._values is not None:
@@ -89,7 +94,7 @@ class RangeFilter(Filter):
     def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.slider(
-            f"Select range for {self.column}",
+            f"{self._label} {self.column}",
             min_value, max_value, (min_value, max_value)
         )
         self._values = selected
@@ -99,8 +104,10 @@ class GreaterFilter(RangeFilter):
     """
     Filter data by low threshold 
     """
-    def __init__(self, column: str) -> None:
-        super().__init__(column)
+    def __init__(self, column: str, label: Optional[str] = None) -> None:
+        super().__init__(column, label)
+        if label is None:
+            self._label = "Enter minimum value of"
         self._values: Union[int, float]
     
     def filter(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -111,7 +118,7 @@ class GreaterFilter(RangeFilter):
     def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.number_input(
-            f"Enter minimum value of {self.column}",
+            f"{self._label} {self.column}",
             min_value, max_value, value=min_value
         )
         self._values = selected
@@ -121,8 +128,10 @@ class LessFilter(RangeFilter):
     """
     Filter data by high threshold 
     """
-    def __init__(self, column: str) -> None:
-        super().__init__(column)
+    def __init__(self, column: str, label: Optional[str] = None) -> None:
+        super().__init__(column, label)
+        if label is None:
+            self._label = "Enter minimum value of"
         self._value: Union[int, float]
     
     def filter(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -133,7 +142,7 @@ class LessFilter(RangeFilter):
     def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.number_input(
-            f"Enter maximum value for {self.column}",
+            f"{self._label} {self.column}",
             min_value, max_value, value=max_value
         )
         self._value = selected
