@@ -7,11 +7,14 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-from typing import List, Union, Tuple
+from typing import List, Union, Tuple, Any
 
 
 class Filter(ABC):
     def __init__(self, column: str) -> None:
+        """     
+        :param column: name of column to be filtered
+        """
         self.column = column
         self._values: Union[List[str], Tuple[int|float]]
         
@@ -19,15 +22,27 @@ class Filter(ABC):
         self._values = None
 
     @abstractmethod
-    def filter(self, df: pd.DataFrame):
+    def filter(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Filters DataFrame
+        
+        :param df: pandas DataFrame
+        :return: Filtered pandas DataFrame
+        """
         pass
 
     @abstractmethod
-    def display(self):
+    def display(self, df: pd.DataFrame) -> None:
+        """
+        Display DataFrame on page
+        
+        :param df: pandas DataFrame
+        """
         pass
 
     @abstractmethod
-    def _get_range(self, df: pd.DataFrame):
+    def _get_range(self, df: pd.DataFrame) -> Any:
+        """Get min/max values of values in column"""
         pass
 
 
@@ -46,7 +61,7 @@ class CategoricalFilter(Filter):
     def _get_range(self, df: pd.DataFrame):
         return df[self.column].unique().tolist()
     
-    def display(self, df: pd.DataFrame):
+    def display(self, df: pd.DataFrame) -> None:
         options = self._get_range(df)
         selected = st.multiselect(f"Select categories from '{self.column}'", options=options)
         self._values = selected
@@ -71,7 +86,7 @@ class RangeFilter(Filter):
             max_value = float(max_value)
         return min_value, max_value
     
-    def display(self, df: pd.DataFrame):
+    def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.slider(
             f"Select range for {self.column}",
@@ -93,7 +108,7 @@ class GreaterFilter(RangeFilter):
             return df[df[self.column] >= self._values]
         return df
     
-    def display(self, df: pd.DataFrame):
+    def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.number_input(
             f"Enter minimum value of {self.column}",
@@ -115,7 +130,7 @@ class LessFilter(RangeFilter):
             return df[df[self.column] <= self._value]
         return df
     
-    def display(self, df: pd.DataFrame):
+    def display(self, df: pd.DataFrame) -> None:
         min_value, max_value = self._get_range(df)
         selected = st.number_input(
             f"Enter maximum value for {self.column}",
@@ -134,8 +149,13 @@ class DataFrameFilter:
         filters: List[Filter],
         columns: int = 2,
         gap: str = "medium",
-        
     ) -> None:
+        """
+        :param filters: List of filters instances
+        :param columns: amount of columns in block
+        :param gap: distance between columns, can be
+            `small`, `medium` or `large`
+        """
         self.df = df
         self.filters = filters
         self.columns = columns
@@ -160,5 +180,7 @@ class DataFrameFilter:
                 filter.display(self.df)
     
     def display_df(self, *args, **kwargs) -> None:
-        """Renders the filtered dataframe in the main area"""
+        """Renders the filtered dataframe in the main area.
+        Supports the same functionality as `st.dataframe`
+        """
         st.dataframe(self.filter_df(), *args, **kwargs)

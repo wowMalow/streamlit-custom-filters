@@ -5,7 +5,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../streamlit-custom-filters"))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -19,8 +19,6 @@ release = '0.1.0'
 
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx_autodoc_typehints",
-    "myst_parser",
 ]
 
 source_suffix = [".rst", ".md"]
