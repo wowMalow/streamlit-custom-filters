@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "streamlit-custom-filters"
-version = "0.1.4"
+version = "0.1.5"
 description = "Streamlit tools for interactive dataframes filtering"
 authors = ["Edward Malov <edwardmalov@gmail.com>"]
 license = "MIT"
