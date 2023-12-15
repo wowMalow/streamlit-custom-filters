@@ -10,7 +10,7 @@ Welcome to Stremlit Custom Filters's documentation!
    :maxdepth: 1
    :caption: Contents:
 
-   demo
+   filters
 
 
 

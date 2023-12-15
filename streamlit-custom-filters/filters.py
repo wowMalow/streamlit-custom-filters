@@ -14,6 +14,7 @@ class Filter(ABC):
     def __init__(self, column: str, label: Optional[str] = None) -> None:
         """     
         :param column: name of column to be filtered
+        :param label: text in filter label before column name
         """
         self.column = column
         self._label = label
@@ -165,6 +166,7 @@ class DataFrameFilter:
         :param gap: distance between columns, can be
             `small`, `medium` or `large`
         """
+        self._check_columns_consistency(df, filters)
         self.df = df
         self.filters = filters
         self.columns = columns
@@ -193,3 +195,7 @@ class DataFrameFilter:
         Supports the same functionality as `st.dataframe`
         """
         st.dataframe(self.filter_df(), *args, **kwargs)
+    
+    def _check_columns_consistency(self, df: pd.DataFrame, filters: List[Filter]):
+        for filter in filters:
+            assert filter.column in df.columns, f"{filter.column} missing in DataFrame. Must be one of {df.columns}"
