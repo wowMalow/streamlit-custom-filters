@@ -1,8 +1,9 @@
 name: Publish to test PyPI
 
 on: 
-    push:
-        branches: ["main"]
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   
