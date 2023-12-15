@@ -4,7 +4,7 @@ name: Deploy Docs to Pages
 on:
   release:
     types:
-      - published
+      - created
 
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
