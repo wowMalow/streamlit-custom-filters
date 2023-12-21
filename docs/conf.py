@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.abspath("../streamlit-custom-filters"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Streamlit Custom Filters'
-copyright = '2023, wowMalow'
+copyright = '2024, wowMalow'
 author = 'Edward Malov'
 release = '0.1.5'
 
